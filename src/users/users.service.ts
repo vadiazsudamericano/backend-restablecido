@@ -8,27 +8,25 @@ import { CreateUserDto } from './dto/create-user.dto';
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private usersRepository: Repository<User>,
+    private readonly userRepo: Repository<User>,
   ) {}
 
-  // Método para crear un nuevo usuario
-  async create(createUserDto: CreateUserDto): Promise<User> {
-    const user = this.usersRepository.create(createUserDto);
-    return this.usersRepository.save(user);
+  async create(data: CreateUserDto): Promise<User> {
+    const user = this.userRepo.create(data);
+    return this.userRepo.save(user);
   }
 
-  // Método para obtener todos los usuarios
-  async findAll(): Promise<User[]> {
-    return this.usersRepository.find();
+  async findOneByEmail(email: string): Promise<User | undefined> {
+    const user = await this.userRepo.findOne({ where: { email } });
+    return user ?? undefined;
   }
 
-  // Método para obtener un usuario por su nombre de usuario
-  async findOneByEmail(email: string): Promise<User | null> {
-    return this.usersRepository.findOne({
-      where: { email },
-      select: ['email', 'password', 'role'], // Usamos el objeto con el campo 'email'
-    });
+  async findById(id: number): Promise<User | undefined> {
+    const user = await this.userRepo.findOne({ where: { id } });
+    return user ?? undefined;
   }
-
-  // Otros métodos como crear, actualizar, etc.
+  findAll(): Promise<User[]> {
+    return this.userRepo.find();
+  }
 }
+

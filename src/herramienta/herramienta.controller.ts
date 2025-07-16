@@ -1,4 +1,6 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+// RUTA: src/herramienta/herramienta.controller.ts
+
+import { Controller, Get, Param } from '@nestjs/common';
 import { HerramientaService } from './herramienta.service';
 import { Herramienta } from './herramienta.entity';
 
@@ -10,14 +12,13 @@ export class HerramientaController {
   findAll(): Promise<Herramienta[]> {
     return this.herramientaService.findAll();
   }
+@Get('nombre/:nombre') // ← primero este
+findByNombre(@Param('nombre') nombre: string) {
+  return this.herramientaService.findByNombre(nombre);
+}
 
-  @Get(':id')
-  findById(@Param('id') id: string): Promise<Herramienta> {
-    return this.herramientaService.findById(+id);
-  }
-
-  @Post()
-  create(@Body() data: Partial<Herramienta>): Promise<Herramienta> {
-    return this.herramientaService.create(data);
-  }
+@Get(':id')
+findById(@Param('id') id: number): Promise<Herramienta> {
+  return this.herramientaService.findById(id);
+}  
 }

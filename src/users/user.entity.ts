@@ -1,13 +1,9 @@
-// src/users/user.entity.ts
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  role: string;
-
-  @Column()
-  nombre: string;
+  id: number;
 
   @Column({ unique: true })
   email: string;
@@ -15,5 +11,9 @@ export class User {
   @Column()
   password: string;
 
-  // Si tienes relaciones con otras entidades (como Photo), agrégalas aquí
+  @Column()
+  name: string;
+
+  @Column({ default: 'user' })
+  role: string;
 }
