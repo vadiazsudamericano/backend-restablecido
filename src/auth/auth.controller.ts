@@ -1,8 +1,8 @@
 import { Controller, Post, Body, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginDto } from 'src/users/dto/login.dto';
-import { User } from 'src/users/user.entity';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { LoginDto } from '../users/dto/login.dto';
+import { CreateUserDto } from '../users/dto/create-user.dto';
+import { User } from '../users/user.entity';
 
 @Controller('auth')
 export class AuthController {
@@ -23,6 +23,7 @@ export class AuthController {
 
   @Post('register')
   async register(@Body() userData: CreateUserDto): Promise<User> {
+    // El DTO CreateUserDto debe incluir: nombre, apellido, email, password
     return this.authService.register(userData);
   }
 }

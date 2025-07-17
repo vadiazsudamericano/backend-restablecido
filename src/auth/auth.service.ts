@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
-import { LoginDto } from 'src/users/dto/login.dto';
-import { User } from 'src/users/user.entity';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { LoginDto } from '../users/dto/login.dto';
+import { CreateUserDto } from '../users/dto/create-user.dto';
+import { User } from '../users/user.entity';
+
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -15,14 +16,15 @@ export class AuthService {
 
   // Método para registrar un nuevo usuario
   async register(createUserDto: CreateUserDto) {
-    const { email, password, nombre } = createUserDto;
+    const { email, password, nombre, apellido } = createUserDto;
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await this.usersService.create({
       email,
       password: hashedPassword,
-      nombre, // usamos el campo correcto del DTO
+      nombre,
+      apellido,
     });
 
     return user;
