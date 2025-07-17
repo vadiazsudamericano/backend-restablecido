@@ -29,4 +29,3 @@ export class UsersService {
     return this.userRepo.find();
   }
 }
-
