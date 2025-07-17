@@ -5,7 +5,11 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { AppController } from './app.controller'; // Importa los que faltan
 import { AppService } from './app.service';     // Importa los que faltan
-
+import { User } from './users/user.entity';
+import { Herramienta } from './herramienta/herramienta.entity';
+import { RegistroHerramienta } from './registro-herramienta/registro-herramienta.entity';
+import { Photo } from './gallery/photo.entity';
+ // Asegúrate de que la ruta sea correcta
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -19,7 +23,7 @@ import { AppService } from './app.service';     // Importa los que faltan
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+  entities: [__dirname + '/**/*.entity{.js,.ts}'],
   synchronize: false, // En desarrollo está bien
     }),
 
