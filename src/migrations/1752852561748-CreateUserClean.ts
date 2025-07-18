@@ -1,10 +1,10 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class CreateUserTable1752764067006 implements MigrationInterface {
-    name = 'CreateUserTable1752764067006'
+export class CreateUserClean1752852561748 implements MigrationInterface {
+    name = 'CreateUserClean1752852561748'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`CREATE TABLE "user" ("id" SERIAL NOT NULL, "username" character varying NOT NULL, "password" character varying NOT NULL, "email" character varying NOT NULL, CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "user" ("id" SERIAL NOT NULL, "nombre" character varying NOT NULL, "apellido" character varying NOT NULL, "password" character varying NOT NULL, "email" character varying NOT NULL, CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "herramienta" ("id" SERIAL NOT NULL, "nombre" character varying NOT NULL, "descripcion" character varying NOT NULL, "uso" character varying, "proceso" text array NOT NULL, "esterilizacion" character varying, CONSTRAINT "UQ_6f7d1d99c2dda647bb8d02dfe7b" UNIQUE ("nombre"), CONSTRAINT "PK_aa654b814d478bf5b5e85bbb0f4" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "registro_herramienta" ("id" SERIAL NOT NULL, "estado" character varying NOT NULL, "fecha" TIMESTAMP NOT NULL DEFAULT now(), "herramientaId" integer, CONSTRAINT "PK_41efe19c38121370f3416e07697" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "photo" ("id" SERIAL NOT NULL, "url" character varying NOT NULL, "userId" integer, CONSTRAINT "PK_723fa50bf70dcfd06fb5a44d4ff" PRIMARY KEY ("id"))`);

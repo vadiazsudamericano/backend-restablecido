@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Photo } from '../gallery/photo.entity'; // Asegúrate de que la ruta sea correcta
 
 @Entity()
 export class User {
@@ -9,9 +10,9 @@ export class User {
   nombre: string;
 
   @Column()
-  apellido: string;  // ← nuevo campo
+  apellido: string;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column()
