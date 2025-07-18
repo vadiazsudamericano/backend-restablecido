@@ -22,7 +22,11 @@ async function bootstrap() {
   });
 
   // ✅ Activa la validación global
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({
+    whitelist: true,
+    forbidNonWhitelisted: true,
+    transform: true,
+  }));
 
   await app.listen(process.env.PORT || 3000);
   console.log(`🚀 App escuchando en puerto ${process.env.PORT || 3000}`);
