@@ -1,9 +1,8 @@
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DataSource } from 'typeorm';
 import { dataSource } from './ormconfig';
-import { ValidationPipe } from '@nestjs/common';
-
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -21,8 +20,9 @@ async function bootstrap() {
     origin: ['http://localhost:4200', 'https://medicleanfrontend-yf39.vercel.app/'],
     credentials: true,
   });
-  
-app.useGlobalPipes(new ValidationPipe());
+
+  // ✅ Activa la validación global
+  app.useGlobalPipes(new ValidationPipe());
 
   await app.listen(process.env.PORT || 3000);
   console.log(`🚀 App escuchando en puerto ${process.env.PORT || 3000}`);
