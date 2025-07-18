@@ -27,8 +27,7 @@ async function bootstrap() {
     forbidNonWhitelisted: true,
     transform: true,
   }));
-
-  await app.listen(process.env.PORT || 3000);
-  console.log(`🚀 App escuchando en puerto ${process.env.PORT || 3000}`);
+  await app.listen(process.env.PORT || 8000);
+  console.log(`🚀 App escuchando en puerto ${process.env.PORT || 8000}`);
 }
 bootstrap();
