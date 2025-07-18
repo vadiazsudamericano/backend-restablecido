@@ -7,14 +7,14 @@ import { dataSource } from './ormconfig';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  try {
+  /*try {
     const dataSourceInstance: DataSource = dataSource;
     await dataSourceInstance.initialize();
     await dataSourceInstance.runMigrations();
     console.log('✅ Base de datos conectada y migraciones aplicadas');
   } catch (err) {
     console.error('❌ Error conectando a la base de datos:', err);
-  }
+  }*/
 
   app.enableCors({
     origin: ['http://localhost:4200', 'https://medicleanfrontend-yf39.vercel.app/'],
