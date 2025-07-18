@@ -11,9 +11,9 @@ async function bootstrap() {
     const dataSourceInstance: DataSource = dataSource;
     await dataSourceInstance.initialize();
     await dataSourceInstance.runMigrations();
-    console.log('📦 Migraciones ejecutadas correctamente');
+    console.log('✅ Base de datos conectada y migraciones aplicadas');
   } catch (err) {
-    console.error('❌ Error al ejecutar migraciones:', err.message);
+    console.error('❌ Error conectando a la base de datos:', err);
   }
 
   app.enableCors({
@@ -21,15 +21,15 @@ async function bootstrap() {
     credentials: true,
   });
 
-  // ✅ Activa la validación global
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
     forbidNonWhitelisted: true,
     transform: true,
   }));
-  
-  await app.listen(parseInt(process.env.PORT || '3000'));
 
-  console.log(`🚀 App escuchando en puerto ${process.env.PORT || 8080}`);
+  const port = process.env.PORT || 3000;
+  await app.listen(port);
+
+  console.log(`🚀 Servidor escuchando en el puerto ${port}`);
 }
 bootstrap();
