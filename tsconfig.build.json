@@ -1,10 +1,13 @@
 {
-  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "removeComments": true
+    "target": "ES2022",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "strict": false,
+    "skipLibCheck": true,
+    "outDir": "./dist"
   },
-  "exclude": ["node_modules", "test", "dist", "**/*.spec.ts"],
-  "include": ["src/**/*", "ormconfig.ts"]
+  "include": ["src/**/*"]
 }

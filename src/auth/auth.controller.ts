@@ -22,8 +22,7 @@ export class AuthController {
   }
 
   @Post('register')
-  async register(@Body() userData: CreateUserDto): Promise<User> {
-    // El DTO CreateUserDto debe incluir: nombre, apellido, email, password
-    return this.authService.register(userData);
-  }
+async register(@Body() createUserDto: CreateUserDto) {
+  return this.authService.register(createUserDto);
+}
 }

@@ -1,18 +1,32 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { HerramientaService } from './herramienta.service';
+// RUTA: src/herramienta/herramienta.service.ts
 
-describe('HerramientaService', () => {
-  let service: HerramientaService;
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Herramienta } from './herramienta.entity';
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [HerramientaService],
-    }).compile();
+@Injectable()
+export class HerramientaService {
+  constructor(
+    @InjectRepository(Herramienta)
+    private readonly herramientaRepository: Repository<Herramienta>,
+  ) {}
 
-    service = module.get<HerramientaService>(HerramientaService);
-  });
+  findAll(): Promise<Herramienta[]> {
+    return this.herramientaRepository.find();
+  }
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
-  });
-});
+  async findById(id: number): Promise<Herramienta> {
+    const herramienta = await this.herramientaRepository.findOneBy({ id });
+    if (!herramienta) {
+      throw new NotFoundException(`No se encontró la herramienta con el ID: ${id}`);
+    }
+    return herramienta;
+  }
+
+  async findByNombre(nombre: string): Promise<Herramienta> {
+    const herramienta = await this.herramientaRepository.findOne({ where: { nombre } });
+    // El controlador se encargará de lanzar la excepción si este método devuelve null.
+    return herramienta;
+  }
+}

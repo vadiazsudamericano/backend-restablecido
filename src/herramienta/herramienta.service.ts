@@ -1,6 +1,6 @@
 // RUTA: src/herramienta/herramienta.service.ts
 
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common'; // <-- Importa NotFoundException
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Herramienta } from './herramienta.entity';
@@ -9,46 +9,34 @@ import { Herramienta } from './herramienta.entity';
 export class HerramientaService {
   constructor(
     @InjectRepository(Herramienta)
-    private repo: Repository<Herramienta>
+    private readonly herramientaRepository: Repository<Herramienta>,
   ) {}
 
   findAll(): Promise<Herramienta[]> {
-    return this.repo.find();
+    return this.herramientaRepository.find();
   }
 
+  // --- FUNCIÓN CORREGIDA #1 ---
   async findById(id: number): Promise<Herramienta> {
-    const herramienta = await this.repo.findOne({ where: { id } });
+    const herramienta = await this.herramientaRepository.findOneBy({ id });
+
+    // Si no se encuentra, lanzamos un error 404.
     if (!herramienta) {
-      throw new NotFoundException(`Herramienta con ID ${id} no encontrada`);
+      throw new NotFoundException(`No se encontró la herramienta con el ID: ${id}`);
     }
+    // Si se encuentra, la devolvemos. Ahora TypeScript sabe que nunca será null.
     return herramienta;
   }
 
-  async findByNombre(nombre: string): Promise<any> {
-    const herramienta = await this.repo.findOne({
-      where: { nombre },
-      relations: ['registros'],
-    });
+  // --- FUNCIÓN CORREGIDA #2 ---
+  async findByNombre(nombre: string): Promise<Herramienta> {
+    const herramienta = await this.herramientaRepository.findOne({ where: { nombre } });
 
+    // Hacemos lo mismo para la búsqueda por nombre.
     if (!herramienta) {
-      throw new NotFoundException(`Herramienta con nombre '${nombre}' no encontrada`);
+      throw new NotFoundException(`No se encontró la herramienta con el nombre: ${nombre}`);
     }
-
-    const estado = herramienta.registros?.[0]?.estado || 'Desconocido';
-
-    return {
-      id: herramienta.id,
-      nombre: herramienta.nombre,
-      descripcion: herramienta.descripcion,
-      uso: herramienta.uso,
-      proceso: herramienta.proceso,
-      estado: estado,
-      esterilizacion: herramienta.esterilizacion,
-    };
-  }
-
-  create(data: Partial<Herramienta>): Promise<Herramienta> {
-    const nueva = this.repo.create(data);
-    return this.repo.save(nueva);
+    // Si llegamos aquí, 'herramienta' es definitivamente una Herramienta, no null.
+    return herramienta;
   }
 }
