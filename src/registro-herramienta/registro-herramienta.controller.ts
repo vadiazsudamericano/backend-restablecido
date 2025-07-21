@@ -1,24 +1,25 @@
-import { Controller, Post, Get, Body, Param } from '@nestjs/common';
+// RUTA: src/registro-herramienta/registro-herramienta.controller.ts
+
+import { Controller, Get, Post, Body } from '@nestjs/common';
 import { RegistroHerramientaService } from './registro-herramienta.service';
 import { RegistroHerramienta } from './registro-herramienta.entity';
 
-@Controller('registro-herramientas')
+// Es buena práctica nombrar las rutas en plural y en minúsculas.
+@Controller('registros-herramienta')
 export class RegistroHerramientaController {
-  constructor(private readonly servicio: RegistroHerramientaService) {}
+  constructor(private readonly registroService: RegistroHerramientaService) {}
 
+  // Ruta para crear un nuevo registro: POST /registros-herramienta
   @Post()
-  create(@Body() data: any) {
-    return this.servicio.create(data);
+  create(@Body() createRegistroDto: { herramientaId: number; estado: string }): Promise<RegistroHerramienta> {
+    return this.registroService.create(createRegistroDto);
   }
 
+  // Ruta para obtener todos los registros: GET /registros-herramienta
   @Get()
   findAll(): Promise<RegistroHerramienta[]> {
-    return this.servicio.findAll();
+    return this.registroService.findAll();
   }
 
-
-  @Get('herramienta/:id')
-  findByHerramienta(@Param('id') id: number) {
-    return this.servicio.findByHerramienta(id);
-  }
+  // La línea con @OneToMany ha sido eliminada porque no pertenece a este archivo.
 }

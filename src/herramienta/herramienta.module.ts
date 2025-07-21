@@ -7,15 +7,10 @@ import { HerramientaService } from './herramienta.service';
 import { HerramientaController } from './herramienta.controller';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Herramienta])
-  ],
-  providers: [
-    HerramientaService
-  ],
-  controllers: [
-    // Esta línea es crucial para que las rutas del controlador sean reconocidas.
-    HerramientaController
-  ],
+  imports: [TypeOrmModule.forFeature([Herramienta])],
+  providers: [HerramientaService],
+  controllers: [HerramientaController],
+  // --- ASEGÚRATE DE QUE ESTA LÍNEA ESTÉ AQUÍ ---
+  exports: [TypeOrmModule]
 })
 export class HerramientaModule {}

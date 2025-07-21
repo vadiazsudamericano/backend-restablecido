@@ -1,25 +1,21 @@
+// RUTA: src/app.module.ts
+
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 
-// Módulos propios
+// Módulos
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { HerramientaModule } from './herramienta/herramienta.module';
+import { HistorialModule } from './historial/historial.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-
-// Entidades
-import { User } from './users/user.entity';
-import { HerramientaModule } from './herramienta/herramienta.module';
-import { Herramienta } from './herramienta/herramienta.entity';
-import { RegistroHerramienta } from './registro-herramienta/registro-herramienta.entity';
-import { Photo } from './gallery/photo.entity';
+import { Historial } from './historial/entities/historial.entity';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true, // Hace que las variables de entorno estén disponibles en toda la app
-    }),
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
@@ -27,12 +23,18 @@ import { Photo } from './gallery/photo.entity';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [User, Herramienta, RegistroHerramienta, Photo],
-      synchronize: false, // Cambia a false en producción si usas migraciones
+      
+      // La mejor práctica es la auto-detección de entidades
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      
+      // Pon esto en 'true' para que NestJS cree la tabla 'historial' que falta.
+      // Una vez que la tabla esté creada, puedes volver a ponerlo en 'false'.
+      synchronize: false,
     }),
     AuthModule,
     UsersModule,
     HerramientaModule,
+    HistorialModule, // Este ya estaba bien
   ],
   controllers: [AppController],
   providers: [AppService],

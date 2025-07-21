@@ -24,7 +24,7 @@ export class HerramientaService {
     return herramienta;
   }
 
-  async findByNombre(nombre: string): Promise<Herramienta> {
+  async findByNombre(nombre: string): Promise<Herramienta | null> {
     const herramienta = await this.herramientaRepository.findOne({ where: { nombre } });
     // El controlador se encargará de lanzar la excepción si este método devuelve null.
     return herramienta;

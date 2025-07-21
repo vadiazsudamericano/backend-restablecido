@@ -1,29 +1,35 @@
 // RUTA: src/herramienta/herramienta.entity.ts
 
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+// Importamos la entidad con la que se va a relacionar
 import { RegistroHerramienta } from '../registro-herramienta/registro-herramienta.entity';
 
-@Entity()
+@Entity('herramienta')
 export class Herramienta {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true })
+  @Column({ unique: true, name: 'nombre' })
   nombre: string;
 
-  @Column()
+  @Column({ name: 'descripcion' })
   descripcion: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, name: 'uso' })
   uso: string;
+  
+  @Column({ nullable: true, name: 'estado' })
+  estado: string;
 
-  @Column("text", { array: true }) // Proceso de desinfección paso a paso
+  @Column({ type: 'text', array: true, nullable: true, name: 'proceso' })
   proceso: string[];
 
-  // ✅ Nueva propiedad agregada
-  @Column({ nullable: true })
-  esterilizacion: string;
 
+
+  // --- ¡ESTA ES LA PROPIEDAD QUE DEBE EXISTIR! ---
+  // @OneToMany define la relación inversa: Una Herramienta puede tener Muchos Registros.
+  // (registro) => registro.herramienta le dice a TypeORM que la propiedad de conexión
+  // en la otra tabla se llama 'herramienta'.
   @OneToMany(() => RegistroHerramienta, (registro) => registro.herramienta)
   registros: RegistroHerramienta[];
 }
