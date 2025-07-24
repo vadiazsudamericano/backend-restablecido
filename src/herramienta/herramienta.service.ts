@@ -1,10 +1,8 @@
-// RUTA: src/herramienta/herramienta.service.ts
-
-import { Injectable, NotFoundException } from '@nestjs/common'; // <-- Importa NotFoundException
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Herramienta } from './herramienta.entity';
-
+import { CrearHerramientaDto } from './dto/crear-herramienta.dto';
 @Injectable()
 export class HerramientaService {
   constructor(
@@ -16,27 +14,22 @@ export class HerramientaService {
     return this.herramientaRepository.find();
   }
 
-  // --- FUNCIÓN CORREGIDA #1 ---
-  async findById(id: number): Promise<Herramienta> {
-    const herramienta = await this.herramientaRepository.findOneBy({ id });
-
-    // Si no se encuentra, lanzamos un error 404.
-    if (!herramienta) {
-      throw new NotFoundException(`No se encontró la herramienta con el ID: ${id}`);
-    }
-    // Si se encuentra, la devolvemos. Ahora TypeScript sabe que nunca será null.
-    return herramienta;
+  findById(id: number): Promise<Herramienta | null> {
+    return this.herramientaRepository.findOneBy({ id }); // ✅ uso correcto del repo
   }
 
-  // --- FUNCIÓN CORREGIDA #2 ---
-  async findByNombre(nombre: string): Promise<Herramienta> {
-    const herramienta = await this.herramientaRepository.findOne({ where: { nombre } });
-
-    // Hacemos lo mismo para la búsqueda por nombre.
-    if (!herramienta) {
-      throw new NotFoundException(`No se encontró la herramienta con el nombre: ${nombre}`);
-    }
-    // Si llegamos aquí, 'herramienta' es definitivamente una Herramienta, no null.
-    return herramienta;
+  findByNombre(nombre: string): Promise<Herramienta | null> {
+    return this.herramientaRepository.findOneBy({ nombre }); // ✅ sin error de tipo
   }
+  async crear(dto: CrearHerramientaDto): Promise<Herramienta> {
+  try {
+    console.log('[DTO recibido]', dto);
+
+    const herramienta = this.herramientaRepository.create(dto);
+    return await this.herramientaRepository.save(herramienta);
+  } catch (error) {
+    console.error('[ERROR al guardar herramienta]', error);
+    throw error; // vuelve a lanzar para que el cliente lo vea
+  }
+}
 }

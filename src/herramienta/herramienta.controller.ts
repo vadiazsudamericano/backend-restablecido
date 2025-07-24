@@ -1,8 +1,7 @@
-// RUTA: src/herramienta/herramienta.controller.ts
-
-import { Controller, Get, Param, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Param, NotFoundException, Post, Body } from '@nestjs/common';
 import { HerramientaService } from './herramienta.service';
 import { Herramienta } from './herramienta.entity';
+import { CrearHerramientaDto } from './dto/crear-herramienta.dto'; // Asegúrate de que exista
 
 @Controller('herramientas')
 export class HerramientaController {
@@ -13,24 +12,31 @@ export class HerramientaController {
     return this.herramientaService.findAll();
   }
 
-  // Ruta para buscar por nombre, ej: /herramientas/nombre/Tijera
   @Get('nombre/:nombre')
   async findByNombre(@Param('nombre') nombre: string): Promise<Herramienta> {
     console.log(`[BACKEND LOG] Petición recibida en el controlador para buscar: "${nombre}"`);
     
     const herramienta = await this.herramientaService.findByNombre(nombre);
-    
-    // Si el servicio no encuentra la herramienta, lanzará un error 404
-    if (!herramienta) {
-      throw new NotFoundException(`Herramienta con nombre "${nombre}" no encontrada en la base de datos.`);
-    }
+if (!herramienta) {
+  throw new NotFoundException(`Herramienta con nombre "${nombre}" no encontrada en la base de datos.`);
+}
     
     return herramienta;
   }
 
-  // Ruta para buscar por ID, ej: /herramientas/1
   @Get(':id')
-  findById(@Param('id') id: string): Promise<Herramienta> {
-    return this.herramientaService.findById(Number(id));
+async findById(@Param('id') id: string): Promise<Herramienta> {
+  const herramienta = await this.herramientaService.findById(Number(id));
+  
+  if (!herramienta) {
+    throw new NotFoundException(`Herramienta con ID ${id} no encontrada`);
+  }
+
+  return herramienta;
+}
+
+  @Post()
+  crearHerramienta(@Body() dto: CrearHerramientaDto) {
+    return this.herramientaService.crear(dto); // CORREGIDO AQUÍ
   }
 }

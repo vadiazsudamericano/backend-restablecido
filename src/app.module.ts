@@ -1,17 +1,16 @@
-// RUTA: src/app.module.ts
-
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 
-// Módulos
+// Módulos de la aplicación
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { HerramientaModule } from './herramienta/herramienta.module';
 import { HistorialModule } from './historial/historial.module';
+import { NotificationsModule } from './notifications/notifications.module'; // --- LÍNEA AÑADIDA ---
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { Historial } from './historial/entities/historial.entity';
 
 @Module({
   imports: [
@@ -23,18 +22,15 @@ import { Historial } from './historial/entities/historial.entity';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      
-      // La mejor práctica es la auto-detección de entidades
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      
-      // Pon esto en 'true' para que NestJS cree la tabla 'historial' que falta.
-      // Una vez que la tabla esté creada, puedes volver a ponerlo en 'false'.
       synchronize: false,
     }),
+    // Módulos de tu aplicación
     AuthModule,
     UsersModule,
     HerramientaModule,
-    HistorialModule, // Este ya estaba bien
+    HistorialModule,
+    NotificationsModule, // --- LÍNEA AÑADIDA ---
   ],
   controllers: [AppController],
   providers: [AppService],

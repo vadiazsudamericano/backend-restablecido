@@ -15,14 +15,7 @@
     "strictNullChecks": false,
     "noImplicitAny": false,
     "strictBindCallApply": false,
-    
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false,
-    "strictPropertyInitialization": false
-  },
-  "include": [
-    "src/**/*",
-    "data-source.ts"
-  ],
-  "exclude": ["node_modules", "dist", "**/*.spec.ts"]
+    "noFallthroughCasesInSwitch": false
+  }
 }
