@@ -1,15 +1,12 @@
 {
+  "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./src",
-    "module": "CommonJS",
-    "target": "ES2022",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "removeComments": true,
+    "sourceMap": false,
+    "declaration": false
   },
   "include": ["src/**/*"],
-  "exclude": ["**/*.spec.ts", "test"]
+  "exclude": ["node_modules", "test", "dist"]
 }

@@ -1,8 +1,10 @@
 // RUTA: src/main.ts
-
+import './crypto-polyfill';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+
+// ... resto de tus importaciones
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
