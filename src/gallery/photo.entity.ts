@@ -4,11 +4,11 @@ import { User } from '../users/user.entity';
 @Entity()
 export class Photo {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column()
-  url: string;
+  url!: string;
 
   @ManyToOne(() => User)
-  user: User;
+  user!: User;
 }
