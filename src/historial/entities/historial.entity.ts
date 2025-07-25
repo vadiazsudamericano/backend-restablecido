@@ -7,18 +7,18 @@ import { Herramienta } from '../../herramienta/herramienta.entity';
 @Entity('registro_herramienta') 
 export class Historial {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @ManyToOne(() => Herramienta)
   // Le decimos que la columna de la relación se llama EXACTAMENTE 'herramientaId'
   @JoinColumn({ name: 'herramientaId' })
-  herramienta: Herramienta;
+  herramienta!: Herramienta;
 
   // Le decimos que esta propiedad se mapea a la columna 'estado'
   @Column({ name: 'estado' })
-  estadoAlEscanear: string;
+  estadoAlEscanear!: string;
 
   // Le decimos que esta propiedad se mapea a la columna 'fecha'
   @CreateDateColumn({ name: 'fecha' })
-  fechaEscaneo: Date;
+  fechaEscaneo!: Date;
 }

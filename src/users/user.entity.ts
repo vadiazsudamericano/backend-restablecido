@@ -4,18 +4,18 @@ import { Historial } from '../historial/entities/historial.entity'; // Importa l
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column()
-  nombre: string;
+  nombre!: string;
 
   @Column()
-  apellido: string;
+  apellido!: string;
 
   @Column({ unique: true })
-  email: string;
+  email!: string;
 
   @Column()
-  password: string;
+  password!: string;
   
 }

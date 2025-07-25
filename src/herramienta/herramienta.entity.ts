@@ -7,26 +7,26 @@ import { RegistroHerramienta } from '../registro-herramienta/registro-herramient
 @Entity()
 export class Herramienta {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column()
-  nombre: string;
+  nombre!: string;
 
   @Column()
-  descripcion: string;
+  descripcion!: string;
 
   @Column()
-  uso: string;
+  uso!: string;
 
   @Column()
-  esterilizacion: string;
+  esterilizacion!: string;
 
   @Column()
-  estado: string;
+  estado!: string;
 
   @Column("text", { array: true })
-  proceso: string[];
+  proceso!: string[];
   
   @OneToMany(() => RegistroHerramienta, (registro) => registro.herramienta)
-  registros: RegistroHerramienta[];
+  registros!: RegistroHerramienta[];
 }

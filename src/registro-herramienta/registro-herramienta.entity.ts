@@ -15,7 +15,7 @@ import { Herramienta } from '../herramienta/herramienta.entity'; // Importamos l
 export class RegistroHerramienta {
 
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   // --- RELACIÓN CON LA HERRAMIENTA ---
   // Define que muchos de estos registros pertenecen a UNA Herramienta.
@@ -27,14 +27,14 @@ export class RegistroHerramienta {
   })
   // Le dice a TypeORM cómo se llamará la columna de la clave foránea en la base de datos.
   @JoinColumn({ name: 'herramienta_id' })
-  herramienta: Herramienta;
+  herramienta!: Herramienta;
 
   // --- COLUMNAS DE DATOS ---
   // El estado que tenía la herramienta en el momento de este registro.
   @Column({ name: 'estado_registrado' })
-  estado: string;
+  estado!: string;
 
   // Columna especial que TypeORM rellena con la fecha y hora de creación.
   @CreateDateColumn({ name: 'fecha_registro' })
-  fecha: Date;
+  fecha!: Date;
 }

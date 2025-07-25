@@ -4,7 +4,7 @@ import { NotificationsService } from './notifications.service';
 
 // DTO para validar el cuerpo de la petición
 class NotificacionEscaneoDto {
-  nombreHerramienta: string;
+  nombreHerramienta!: string;
 }
 
 @Controller('notifications') // El endpoint base será /notifications
