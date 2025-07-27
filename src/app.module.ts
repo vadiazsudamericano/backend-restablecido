@@ -1,3 +1,5 @@
+// RUTA: src/app.module.ts
+
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -17,19 +19,24 @@ import { HistorialModule } from './historial/historial.module';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        url: configService.get('DATABASE_URL'),
+      useFactory: (configService: ConfigService) => {
+        const isProduction = configService.get<string>('NODE_ENV') === 'production';
         
-        ssl: configService.get('NODE_ENV') === 'production' 
-          ? { rejectUnauthorized: false } 
-          : false,
+        return {
+          type: 'postgres',
+          // Añadimos '!' para asegurar a TypeScript que estas variables existirán
+          host: configService.get<string>('PGHOST')!,
+          port: parseInt(configService.get<string>('PGPORT')!, 10),
+          username: configService.get<string>('PGUSER')!,
+          password: configService.get<string>('PGPASSWORD')!,
+          database: configService.get<string>('PGDATABASE')!,
           
-        autoLoadEntities: true,
-        synchronize: false,
-        retryAttempts: 5,
-        retryDelay: 3000,
-      }),
+          ssl: isProduction ? { rejectUnauthorized: false } : false,
+            
+          entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+          synchronize: true, 
+        };
+      },
     }),
 
     // Módulos de la app
