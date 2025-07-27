@@ -1,8 +1,8 @@
-// RUTA: src/app.module.ts (VERSIÓN DE DIAGNÓSTICO CON CREDENCIALES HARDCODEADAS)
+// RUTA: src/app.module.ts (VERSIÓN FINAL Y FUNCIONAL)
 
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config'; // Mantenemos ConfigModule por si otros módulos lo usan
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -16,33 +16,36 @@ import { HistorialModule } from './historial/historial.module';
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
 
-    // ====================================================================
-    // === ¡PRUEBA DE DIAGNÓSTICO DEFINITIVA! ===
-    // Hemos reemplazado la configuración dinámica por una fija con tus datos.
-    // ====================================================================
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      
-      // --- REEMPLAZA ESTOS VALORES CON TUS DATOS REALES DE RAILWAY ---
-      host: 'postgres.railway.internal',                 // Ej: 'postgres.railway.internal'
-      port: 5432,                          // El puerto INTERNO, normalmente 5432
-      username: 'postgres',               // Ej: 'postgres'
-      password: 'lKbtGWYLkSwKlGXGvQoGLwPLSxHyZUWr',           // La contraseña larga de Railway
-      database: 'railway',           // Ej: 'railway'
-      // -----------------------------------------------------------------
-
-      // La configuración SSL sigue siendo crucial
-      ssl: {
-        rejectUnauthorized: false,
-      },
+    // --- ESTA ES LA CONFIGURACIÓN CORRECTA Y A PRUEBA DE FALLOS ---
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService): TypeOrmModuleOptions => {
+        const isProduction = configService.get<string>('NODE_ENV') === 'production';
         
-      entities: [__dirname + '/**/*.entity.js'], 
-      
-      synchronize: true, 
+        return {
+          type: 'postgres',
+          // Construimos la conexión manualmente a partir de las variables
+          host: configService.get<string>('PGHOST')!,
+          port: parseInt(configService.get<string>('PGPORT')!, 10),
+          username: configService.get<string>('PGUSER')!,
+          password: configService.get<string>('PGPASSWORD')!,
+          database: configService.get<string>('PGDATABASE')!,
+          
+          // La configuración SSL es crucial para producción
+          ssl: isProduction ? { rejectUnauthorized: false } : false,
+            
+          // Le decimos dónde encontrar los archivos .js compilados
+          entities: [__dirname + '/**/*.entity.js'], 
+          
+          // Sincroniza las tablas (perfecto para desarrollo y este proyecto)
+          synchronize: true, 
+        };
+      },
     }),
-    // ====================================================================
+    // --- FIN DE LA CONFIGURACIÓN DE TYPEORM ---
 
-    // Módulos de la app
+    // Volvemos a activar los módulos de nuestra aplicación
     AuthModule,
     UsersModule,
     HerramientaModule,

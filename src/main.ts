@@ -1,4 +1,4 @@
-// RUTA: src/main.ts (VERSIÓN LIMPIA)
+// RUTA: src/main.ts (LA SOLUCIÓN DEFINITIVA)
 
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
@@ -8,6 +8,9 @@ async function bootstrap() {
 
   app.enableCors();
 
-  await app.listen(process.env.PORT || 3000, '0.0.0.0');
+  // --- ¡ESTE ES EL ÚNICO CAMBIO QUE NECESITAS! ---
+  // Forzamos a la aplicación a escuchar en el puerto 8080,
+  // que es el que Railway está exponiendo públicamente.
+  await app.listen(8080);
 }
 bootstrap();
