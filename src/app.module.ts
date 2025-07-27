@@ -15,12 +15,20 @@ import { HistorialModule } from './historial/historial.module';
     ConfigModule.forRoot({ isGlobal: true }),
 
     TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        url: configService.get<string>('DATABASE_URL'),
+        url: configService.get('DATABASE_URL'),
+        
+        ssl: configService.get('NODE_ENV') === 'production' 
+          ? { rejectUnauthorized: false } 
+          : false,
+          
         autoLoadEntities: true,
         synchronize: false,
+        retryAttempts: 5,
+        retryDelay: 3000,
       }),
     }),
 
