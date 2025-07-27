@@ -1,14 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-
+import { AppController } from './app.controller';
 // Módulos de la aplicación
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { HerramientaModule } from './herramienta/herramienta.module';
 import { HistorialModule } from './historial/historial.module';
-
-import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 @Module({
