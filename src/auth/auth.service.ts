@@ -32,7 +32,7 @@ export class AuthService {
 
   // Validar las credenciales
   async validateUser(email: string, password: string): Promise<User | null> {
-    const user = await this.usersService.findOneByEmail(email);
+    const user = await this.usersService.findOneByEmailWithPassword(email);
 
     if (!user || !user.password) return null;
 
@@ -42,7 +42,7 @@ export class AuthService {
 
   // Generar JWT sin rol
   async login(user: User) {
-    const payload = { email: user.email, sub: user.id }; // sub estándar en JWT
+    const payload = { email: user.email, sub: user.id, role: user.role }; // sub estándar en JWT
     return {
       access_token: this.jwtService.sign(payload),
     };

@@ -21,7 +21,6 @@ if (typeof globalThis.crypto === 'undefined') {
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-
 // ... resto de tus importaciones
 
 async function bootstrap() {
@@ -40,8 +39,7 @@ async function bootstrap() {
   app.enableCors(corsOptions);
 
   app.useGlobalPipes(new ValidationPipe());
-
-  await app.listen(process.env.PORT || 3000);
+  await app.listen(process.env.PORT || 3000, '0.0.0.0');
   console.log(`Application is running on: ${await app.getUrl()}`);
 }
 bootstrap();
