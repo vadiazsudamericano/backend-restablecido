@@ -7,7 +7,6 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { HerramientaModule } from './herramienta/herramienta.module';
 import { HistorialModule } from './historial/historial.module';
-import { NotificationsModule } from './notifications/notifications.module'; // --- LÍNEA AÑADIDA ---
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -34,7 +33,6 @@ import { AppService } from './app.service';
     UsersModule,
     HerramientaModule,
     HistorialModule,
-    NotificationsModule, // --- LÍNEA AÑADIDA ---
   ],
   controllers: [AppController],
   providers: [AppService],
