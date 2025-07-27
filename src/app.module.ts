@@ -2,31 +2,29 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
-// Módulos de la aplicación
+import { AppService } from './app.service';
+
+// Módulos personalizados
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { HerramientaModule } from './herramienta/herramienta.module';
 import { HistorialModule } from './historial/historial.module';
-import { AppService } from './app.service';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        host: configService.get<string>('DB_HOST'),
-        port: configService.get<number>('DB_PORT'),
-        username: configService.get<string>('DB_USERNAME'),
-        password: configService.get<string>('DB_PASSWORD'),
-        database: configService.get<string>('DB_NAME'),
+        url: configService.get<string>('DATABASE_URL'),
         autoLoadEntities: true,
         synchronize: false,
+      }),
     }),
-     }),
-    // Módulos de tu aplicación
+
+    // Módulos de la app
     AuthModule,
     UsersModule,
     HerramientaModule,
