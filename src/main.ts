@@ -1,19 +1,21 @@
+import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { Logger } from '@nestjs/common';
-import cors from 'cors';
-
+import * as cors from 'cors';
+import * as process from 'process';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Activar CORS globalmente
-  app.use(cors());
+  // CORS manual (si quieres permitir desde todos los orígenes)
+  app.enableCors({
+    origin: '*', // o pon tu frontend: 'https://tu-app.vercel.app'
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  });
 
-  // Puerto dinámico para producción (Railway) o 8080 en local
-  const PORT = process.env.PORT || 8080;
-
-  await app.listen(PORT);
-  Logger.log(`🚀 Backend escuchando en el puerto ${PORT}`);
+  // Puerto dinámico para Railway
+  const port = process.env.PORT || 8080;
+  await app.listen(port);
+  console.log(`🚀 Backend escuchando en el puerto ${port}`);
 }
 bootstrap();
