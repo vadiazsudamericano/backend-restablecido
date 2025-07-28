@@ -1,10 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
-import { LoginDto } from '../users/dto/login.dto';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { User } from '../users/user.entity';
-
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -14,12 +12,13 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  // Método para registrar un nuevo usuario
-  async register(createUserDto: CreateUserDto) {
+  async register(createUserDto: CreateUserDto): Promise<User> {
     const { email, password, nombre, apellido } = createUserDto;
 
+    // Hashear la contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Crear usuario con la contraseña hasheada
     const user = await this.usersService.create({
       email,
       password: hashedPassword,
@@ -30,19 +29,20 @@ export class AuthService {
     return user;
   }
 
-  // Validar las credenciales
   async validateUser(email: string, password: string): Promise<User | null> {
     const user = await this.usersService.findOneByEmailWithPassword(email);
-
     if (!user || !user.password) return null;
 
     const isMatch = await bcrypt.compare(password, user.password);
     return isMatch ? user : null;
   }
 
-  // Generar JWT sin rol
-  async login(user: User) {
-    const payload = { email: user.email, sub: user.id, role: user.role }; // sub estándar en JWT
+  async login(user: User): Promise<{ access_token: string }> {
+    const payload = {
+      email: user.email,
+      sub: user.id, // 'sub' es el estándar para el identificador del sujeto en JWT
+      role: user.role,
+    };
     return {
       access_token: this.jwtService.sign(payload),
     };

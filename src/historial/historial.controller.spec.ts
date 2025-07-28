@@ -1,20 +1,23 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { HistorialController } from './historial.controller';
+import { Controller, Post, Body, Get, UseGuards } from '@nestjs/common';
 import { HistorialService } from './historial.service';
+import { CreateHistorialDto } from './dto/create-historial.dto';
+import { AuthGuard } from '@nestjs/passport';
 
-describe('HistorialController', () => {
-  let controller: HistorialController;
+@Controller('historial')
+export class HistorialController {
+  constructor(private readonly historialService: HistorialService) {}
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      controllers: [HistorialController],
-      providers: [HistorialService],
-    }).compile();
+  // 🔐 Ruta protegida con JWT para registrar escaneos
+  @UseGuards(AuthGuard('jwt'))
+  @Post()
+  async create(@Body() createHistorialDto: CreateHistorialDto) {
+    return this.historialService.create(createHistorialDto);
+  }
 
-    controller = module.get<HistorialController>(HistorialController);
-  });
-
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
-  });
-});
+  // 🔐 Ruta protegida para obtener historial
+  @UseGuards(AuthGuard('jwt'))
+  @Get()
+  findAll() {
+    return this.historialService.findAll();
+  }
+}

@@ -20,4 +20,5 @@ export class HistorialController {
   findAll() {
     return this.historialService.findAll();
   }
+  
 }

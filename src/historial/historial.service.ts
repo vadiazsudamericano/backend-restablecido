@@ -13,10 +13,16 @@ export class HistorialService {
     private readonly registroRepository: Repository<RegistroHerramienta>,
   ) {}
 
-  create(createHistorialDto: CreateHistorialDto) {
-    const nuevoRegistro = this.registroRepository.create(createHistorialDto);
-    return this.registroRepository.save(nuevoRegistro);
-  }
+  create(dto: CreateHistorialDto) {
+  const nuevoRegistro = this.registroRepository.create({
+    estadoAlEscanear: dto.estadoAlEscanear,
+    herramienta: { id: dto.herramientaId },
+  });
+
+  return this.registroRepository.save(nuevoRegistro);
+}
+
+
 
   // --- ¡ESTE ES EL MÉTODO CLAVE! ---
   findAll(): Promise<RegistroHerramienta[]> {

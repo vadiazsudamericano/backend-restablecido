@@ -10,7 +10,10 @@ export class RegistroHerramienta {
   fecha!: string;
 
   @Column()
-  observaciones!: string;
+  estadoAlEscanear!: string;
+
+  @Column({ nullable: true })
+  observaciones?: string;
 
   @ManyToOne(() => Herramienta, (herramienta) => herramienta.registros)
   herramienta!: Herramienta;
