@@ -7,8 +7,8 @@ async function bootstrap() {
     origin: [],
     credentials: true,
   }); 
-  const port = process.env.PORT || 8080;
-  await app.listen(port);
+  const port = process.env.PORT || 3000;
+  await app.listen(8080);
   console.log(`🚀 Backend escuchando en el puerto ${port}`);
 }
 bootstrap();
