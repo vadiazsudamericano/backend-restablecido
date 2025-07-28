@@ -20,13 +20,11 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
-  async login(@Body() loginDto: LoginDto) {
-    const user = await this.authService.validateUser(loginDto.email, loginDto.password);
-    if (!user) {
-      throw new UnauthorizedException('Credenciales inválidas');
-    }
-    return this.authService.login(user);
-  }
+async login(@Body() body: { email: string; password: string }) {
+  const { email, password } = body;
+  return this.authService.login(email, password);
+}
+
 
   @Post('register')
   register(@Body() createUserDto: CreateUserDto) {

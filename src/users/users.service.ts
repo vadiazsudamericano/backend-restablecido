@@ -16,12 +16,17 @@ export class UsersService {
   async create(data: CreateUserDto): Promise<User> {
     const existingUser = await this.userRepo.findOne({ where: { email: data.email } });
 
+    const roleValue: Role = (data.role as Role) || Role.User;
+
     if (existingUser) {
       console.log(`Usuario encontrado (${data.email}). Actualizando contraseña...`);
       const hashedPassword = await bcrypt.hash(data.password, 10);
       await this.userRepo.update(existingUser.id, {
-        ...data,
+        nombre: data.nombre,
+        apellido: data.apellido,
+        email: data.email,
         password: hashedPassword,
+        role: roleValue,
       });
       const updated = await this.userRepo.findOne({ where: { id: existingUser.id } });
       if (!updated) throw new NotFoundException('Usuario actualizado no encontrado');
@@ -31,21 +36,23 @@ export class UsersService {
     console.log(`Usuario nuevo (${data.email}). Creando...`);
     const hashedPassword = await bcrypt.hash(data.password, 10);
     const user = this.userRepo.create({
-      ...data,
+      nombre: data.nombre,
+      apellido: data.apellido,
+      email: data.email,
       password: hashedPassword,
-      role: Role.User,
+      role: roleValue,
     });
     return this.userRepo.save(user);
   }
 
   async findOneByEmail(email: string): Promise<User | undefined> {
     const user = await this.userRepo.findOne({ where: { email } });
-    return user || undefined;
+    return user ?? undefined;
   }
 
   async findById(id: number): Promise<User | undefined> {
     const user = await this.userRepo.findOne({ where: { id } });
-    return user || undefined;
+    return user ?? undefined;
   }
 
   findAll(): Promise<User[]> {
@@ -59,7 +66,7 @@ export class UsersService {
       .addSelect('user.password')
       .addSelect('user.role')
       .getOne();
-    return user || undefined;
+    return user ?? undefined;
   }
 
   async remove(id: number): Promise<{ message: string }> {
@@ -73,6 +80,6 @@ export class UsersService {
 
   async findOne(id: number): Promise<User | undefined> {
     const user = await this.userRepo.findOne({ where: { id } });
-    return user || undefined;
+    return user ?? undefined;
   }
 }

@@ -13,7 +13,7 @@ export class AuthService {
   ) {}
 
   async register(createUserDto: CreateUserDto): Promise<User> {
-    const { email, password, nombre, apellido } = createUserDto;
+    const { email, password, nombre, apellido, role } = createUserDto;
 
     // Hashear la contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -24,6 +24,7 @@ export class AuthService {
       password: hashedPassword,
       nombre,
       apellido,
+      role
     });
 
     return user;
@@ -37,14 +38,20 @@ export class AuthService {
     return isMatch ? user : null;
   }
 
-  async login(user: User): Promise<{ access_token: string }> {
-    const payload = {
-      email: user.email,
-      sub: user.id, // 'sub' es el estándar para el identificador del sujeto en JWT
-      role: user.role,
-    };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
+  async login(email: string, password: string): Promise<{ access_token: string }> {
+  const user = await this.validateUser(email, password);
+  if (!user) {
+    throw new UnauthorizedException('Credenciales inválidas');
+  }
+
+  const payload = {
+    sub: user.id,
+    email: user.email,
+    role: user.role,
+  };
+
+  return {
+    access_token: this.jwtService.sign(payload),
+  };
   }
 }
