@@ -1,22 +1,26 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { Request, Response } from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // Habilitar CORS para frontend local y en Vercel
   app.enableCors({
     origin: [
       'http://localhost:4200',
-      'https://tudominio.vercel.app' // cámbialo si ya lo tienes
+      'https://mediclean.vercel.app' // cambia si tu frontend tiene otro dominio
     ],
-    credentials: true
+    credentials: true,
   });
 
-  // Respuesta para la ruta raíz
-  app.getHttpAdapter().get('/', (_, res) => {
+  // Ruta raíz de prueba
+  app.getHttpAdapter().get('/', (req: Request, res: Response) => {
     res.send('Hola desde el backend en producción 👋');
   });
 
-  await app.listen(process.env.PORT || 3000);
+  const PORT = process.env.PORT || 8080;
+  await app.listen(PORT);
+  console.log(`🚀 Backend escuchando en el puerto ${PORT}`);
 }
 bootstrap();
