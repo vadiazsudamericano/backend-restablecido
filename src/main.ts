@@ -15,7 +15,6 @@ async function bootstrap() {
 
   // Puerto dinámico para Railway
   const port = process.env.PORT || 8080;
-  await app.listen(port);
   console.log(`🚀 Backend escuchando en el puerto ${port}`);
 }
 bootstrap();
