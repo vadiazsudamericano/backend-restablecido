@@ -17,15 +17,24 @@ export class HerramientaController {
 
   @Get('nombre/:nombre')
   async getPorNombre(@Param('nombre') nombre: string) {
-    const herramienta = await this.herramientaRepository.findOne({ where: { nombre } });
+    const herramienta = await this.herramientaRepository
+      .createQueryBuilder('herramienta')
+      .where('LOWER(herramienta.nombre) = LOWER(:nombre)', { nombre })
+      .getOne();
+
     if (!herramienta) {
       throw new NotFoundException('Herramienta no encontrada');
     }
+
     return herramienta;
   }
 
   @Get(':id')
-  async getById(@Param('id') id: number) {
-    return this.herramientaRepository.findOne({ where: { id } });
+  async getPorId(@Param('id') id: number) {
+    const herramienta = await this.herramientaRepository.findOne({ where: { id } });
+    if (!herramienta) {
+      throw new NotFoundException('Herramienta no encontrada');
+    }
+    return herramienta;
   }
 }
