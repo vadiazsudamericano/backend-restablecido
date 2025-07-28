@@ -1,26 +1,19 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { Request, Response } from 'express';
+import { Logger } from '@nestjs/common';
+import cors from 'cors';
+
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Habilitar CORS para frontend local y en Vercel
-  app.enableCors({
-    origin: [
-      'http://localhost:4200',
-      'https://mediclean.vercel.app' // cambia si tu frontend tiene otro dominio
-    ],
-    credentials: true,
-  });
+  // Activar CORS globalmente
+  app.use(cors());
 
-  // Ruta raíz de prueba
-  app.getHttpAdapter().get('/', (req: Request, res: Response) => {
-    res.send('Hola desde el backend en producción 👋');
-  });
-
+  // Puerto dinámico para producción (Railway) o 8080 en local
   const PORT = process.env.PORT || 8080;
+
   await app.listen(PORT);
-  console.log(`🚀 Backend escuchando en el puerto ${PORT}`);
+  Logger.log(`🚀 Backend escuchando en el puerto ${PORT}`);
 }
 bootstrap();
