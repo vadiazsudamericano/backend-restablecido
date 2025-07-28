@@ -12,18 +12,19 @@ export class HerramientaController {
 
   @Get()
   async getAll() {
-    return this.herramientaRepository.find();
+    return await this.herramientaRepository.find();
   }
 
+  // ✅ Búsqueda flexible por nombre (insensible a mayúsculas y tildes si usas PostgreSQL)
   @Get('nombre/:nombre')
   async getPorNombre(@Param('nombre') nombre: string) {
     const herramienta = await this.herramientaRepository
       .createQueryBuilder('herramienta')
-      .where('LOWER(herramienta.nombre) = LOWER(:nombre)', { nombre })
+      .where('LOWER(herramienta.nombre) LIKE LOWER(:nombre)', { nombre: `%${decodeURIComponent(nombre)}%` })
       .getOne();
 
     if (!herramienta) {
-      throw new NotFoundException('Herramienta no encontrada');
+      throw new NotFoundException(`No se encontró la herramienta con nombre: ${decodeURIComponent(nombre)}`);
     }
 
     return herramienta;
@@ -32,9 +33,11 @@ export class HerramientaController {
   @Get(':id')
   async getPorId(@Param('id') id: number) {
     const herramienta = await this.herramientaRepository.findOne({ where: { id } });
+
     if (!herramienta) {
-      throw new NotFoundException('Herramienta no encontrada');
+      throw new NotFoundException(`No se encontró la herramienta con ID: ${id}`);
     }
+
     return herramienta;
   }
 }
