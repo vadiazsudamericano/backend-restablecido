@@ -1,30 +1,17 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  ManyToOne,
-  JoinColumn
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { Herramienta } from '../herramienta/herramienta.entity';
 
-@Entity({ name: 'registro_herramienta' })
+@Entity()
 export class RegistroHerramienta {
-
-  // Le decimos a TypeScript que confíe en que TypeORM inicializará el 'id'.
   @PrimaryGeneratedColumn()
   id!: number;
 
-  // 'estado' ya está inicializado, así que no necesita el '!'.
-  @Column({ default: 'disponible' })
-  estado: string = 'disponible';
+  @Column()
+  fecha!: string;
 
-  // Le decimos a TypeScript que confíe en que TypeORM/@CreateDateColumn inicializará la 'fecha'.
-  @CreateDateColumn()
-  fecha!: Date;
+  @Column()
+  observaciones!: string;
 
-  // Le decimos a TypeScript que confíe en que TypeORM inicializará la relación 'herramienta'.
-  @ManyToOne(() => Herramienta, (herramienta) => herramienta.registros, { nullable: false })
-  @JoinColumn({ name: 'herramienta_id' })
+  @ManyToOne(() => Herramienta, (herramienta) => herramienta.registros)
   herramienta!: Herramienta;
 }
