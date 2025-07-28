@@ -22,8 +22,17 @@ export class AuthController {
   @Post('login')
 async login(@Body() body: { email: string; password: string }) {
   const { email, password } = body;
-  return this.authService.login(email, password);
+
+  const user = await this.authService.validateUser(email, password);
+
+  if (!user) {
+    throw new UnauthorizedException('Credenciales incorrectas');
+  }
+
+  // ✅ Solo pasamos el objeto `user` como argumento
+  return this.authService.login(user);
 }
+
 
 
   @Post('register')
