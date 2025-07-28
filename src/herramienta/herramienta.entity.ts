@@ -1,10 +1,9 @@
 // RUTA: src/herramienta/herramienta.entity.ts
 
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-// Importamos la entidad con la que se va a relacionar
 import { RegistroHerramienta } from '../registro-herramienta/registro-herramienta.entity';
 
-@Entity({ name: 'herramienta' }) // Es una buena práctica darle un nombre explícito a la tabla
+@Entity({ name: 'herramienta' })
 export class Herramienta {
   @PrimaryGeneratedColumn()
   id!: number;
@@ -15,25 +14,29 @@ export class Herramienta {
   @Column()
   descripcion!: string;
 
-  @Column()
-  uso!: string;
+  // === CORRECCIÓN #1 ===
+  // Si 'uso' puede no especificarse al principio, lo hacemos opcional.
+  @Column({ nullable: true }) 
+  uso?: string; // El '?' hace que sea opcional también para TypeScript
 
-  @Column()
-  esterilizacion!: string;
+  // === CORRECCIÓN #2 ===
+  // Lo mismo para 'esterilizacion'. La hacemos opcional.
+  @Column({ nullable: true })
+  esterilizacion?: string;
 
-  // ===============================================
-  // === ¡ESTE ES EL ÚNICO CAMBIO QUE NECESITAS! ===
-  // ===============================================
+  // === ¡El campo 'estado' ya lo tienes resuelto perfectamente! ===
   @Column({
     type: 'varchar',
-    nullable: true,      // 1. Permite que la columna esté vacía temporalmente para las filas existentes.
-    default: 'Disponible' // 2. Asigna 'Disponible' a cualquier herramienta nueva que se cree.
+    nullable: true,
+    default: 'Disponible'
   })
-  estado!: string;
-  // ===============================================
+  estado: string = 'Disponible';
 
-  @Column("text", { array: true })
-  proceso!: string[];
+  // === CORRECCIÓN #3 ===
+  // Para un array, el mejor valor por defecto es un array vacío [].
+  // Así nunca será nulo.
+  @Column("text", { array: true, default: () => "'{}'" }) // El default para un array en postgres
+  proceso: string[] = [];
   
   @OneToMany(() => RegistroHerramienta, (registro) => registro.herramienta)
   registros!: RegistroHerramienta[];
