@@ -13,17 +13,8 @@ export class AuthService {
   ) {}
 
   async register(createUserDto: CreateUserDto): Promise<User> {
-    const { email, password, nombre, apellido } = createUserDto;
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const user = await this.usersService.create({
-      email,
-      password: hashedPassword,
-      nombre,
-      apellido,
-    });
-
-    return user;
+    // 👇 No se hace hash aquí. Lo hace UsersService.create()
+    return this.usersService.create(createUserDto);
   }
 
   async validateUser(email: string, password: string): Promise<User | null> {
