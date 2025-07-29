@@ -1,8 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { Photo } from '../gallery/photo.entity'; // Asegúrate de que la ruta sea correcta
 import { Historial } from '../historial/entities/historial.entity'; // Importa la entidad Historial
 import { Role } from '../auth/enums/role.enum';
-@Entity('users')
+@Entity('user')
 export class User {
   @PrimaryGeneratedColumn()
   id!: number;
