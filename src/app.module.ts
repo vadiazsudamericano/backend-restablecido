@@ -25,7 +25,7 @@ import { HistorialModule } from './historial/historial.module';
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
 
       // --- ¡AÑADE ESTAS DOS LÍNEAS TEMPORALMENTE! ---
-      synchronize: true,
+      synchronize: false,
       // -------------------------------------------------
       
       ssl: {
