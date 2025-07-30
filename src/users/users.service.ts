@@ -85,11 +85,17 @@ export class UsersService {
   }
   // src/users/users.service.ts
 async updateRole(id: number, role: string) {
-    const user = await this.userRepo.findOneBy({ id });
-    if (!user) throw new BadRequestException('Usuario no encontrado');
-
-    user.role = role as Role;
-    return this.userRepo.save(user);
+  const user = await this.userRepo.findOneBy({ id });
+  if (!user) {
+    throw new BadRequestException('Usuario no encontrado');
   }
 
+  // Validación estricta del rol
+  if (!Object.values(Role).includes(role as Role)) {
+    throw new BadRequestException(`Rol inválido. Debe ser uno de: ${Object.values(Role).join(', ')}`);
+  }
+
+  user.role = role as Role;
+  return this.userRepo.save(user);
+}
 }

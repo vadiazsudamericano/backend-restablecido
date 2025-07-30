@@ -1,24 +1,23 @@
-// RUTA: src/historial/historial.controller.ts
-
-import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Request as Req, UseGuards } from '@nestjs/common';
 import { HistorialService } from './historial.service';
 import { CreateHistorialDto } from './dto/create-historial.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { Request } from 'express'; // ✅ agrega esta línea
 
 @Controller('historial')
-@UseGuards(AuthGuard('jwt')) // Protegemos todo el controlador
+@UseGuards(AuthGuard('jwt'))
 export class HistorialController {
   constructor(private readonly historialService: HistorialService) {}
 
-  // --- ¡ASEGÚRATE DE TENER ESTA RUTA! ---
   @Post()
-  create(@Body() createHistorialDto: CreateHistorialDto) {
-    return this.historialService.create(createHistorialDto);
+  create(@Req() req: Request, @Body() createHistorialDto: CreateHistorialDto) {
+    const userId = (req.user as any).id; // 👈 usa cast para evitar error
+    return this.historialService.create(createHistorialDto, userId);
   }
 
   @Get()
-  findAll() {
-    return this.historialService.findAll();
+  findAll(@Req() req: Request) {
+    const userId = (req.user as any).id;
+    return this.historialService.findByUserId(userId);
   }
-  
 }

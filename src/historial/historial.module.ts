@@ -9,7 +9,7 @@ import { HerramientaModule } from '../herramienta/herramienta.module';
 import { RegistroHerramienta } from '../registro-herramienta/registro-herramienta.entity';
 @Module({
   imports: [
-    TypeOrmModule.forFeature([RegistroHerramienta]),
+    TypeOrmModule.forFeature([Historial]),
     forwardRef(() => HerramientaModule), // <-- Soluciona la dependencia
   ],
   controllers: [HistorialController],

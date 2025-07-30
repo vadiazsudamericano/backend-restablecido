@@ -1,38 +1,31 @@
-// RUTA: src/historial/historial.service.ts
-
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { RegistroHerramienta } from '../registro-herramienta/registro-herramienta.entity';
+import { Historial } from './entities/historial.entity';
 import { CreateHistorialDto } from './dto/create-historial.dto';
 
 @Injectable()
 export class HistorialService {
   constructor(
-    @InjectRepository(RegistroHerramienta)
-    private readonly registroRepository: Repository<RegistroHerramienta>,
+    @InjectRepository(Historial)
+    private historialRepository: Repository<Historial>,
   ) {}
 
-  create(dto: CreateHistorialDto) {
-  const nuevoRegistro = this.registroRepository.create({
-    estadoAlEscanear: dto.estadoAlEscanear,
-    herramienta: { id: dto.herramientaId },
-  });
+  // Guardar historial con el userId autenticado
+  async create(data: CreateHistorialDto, userId: number) {
+    const historial = this.historialRepository.create({
+      ...data,
+      userId,
+    });
+    return await this.historialRepository.save(historial);
+  }
 
-  return this.registroRepository.save(nuevoRegistro);
-}
-
-
-
-  // --- ¡ESTE ES EL MÉTODO CLAVE! ---
-  findAll(): Promise<RegistroHerramienta[]> {
-    return this.registroRepository.find({
-      // Con 'relations', le decimos a TypeORM que también traiga el objeto 'herramienta' completo.
+  // Devolver historial solo del usuario autenticado
+  async findByUserId(userId: number) {
+    return await this.historialRepository.find({
+      where: { userId },
       relations: ['herramienta'],
-      // Ordenamos los resultados para que los más recientes aparezcan primero.
-      order: {
-        fecha: 'DESC',
-      },
+      order: { createdAt: 'DESC' },
     });
   }
 }
