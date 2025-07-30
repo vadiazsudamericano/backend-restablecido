@@ -14,24 +14,26 @@ export class Historial {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @CreateDateColumn()
-  createdAt!: Date;
-
   @Column()
   herramientaId!: number;
+
+  @Column()
+  userId!: number;
+
+  @Column({ nullable: true })
+  accion?: string;
+
+  @Column({ nullable: true })
+  referenciaVisual?: string;
+
+  @CreateDateColumn()
+  createdAt!: Date;
 
   @ManyToOne(() => Herramienta)
   @JoinColumn({ name: 'herramientaId' })
   herramienta!: Herramienta;
 
-  @Column()
-  userId!: number;
-
   @ManyToOne(() => User)
   @JoinColumn({ name: 'userId' })
   usuario!: User;
-
-  @Column({ nullable: true })
-referenciaVisual!: string;
-
 }

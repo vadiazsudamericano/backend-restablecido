@@ -12,12 +12,14 @@ export class HistorialService {
   ) {}
 
   async create(data: CreateHistorialDto, userId: number) {
-    const historial = this.historialRepository.create({
-      herramientaId: data.herramientaId,
-      userId
-    });
-    return await this.historialRepository.save(historial);
-  }
+  const historial = this.historialRepository.create({
+    herramientaId: data.herramientaId,
+    userId,
+    accion: data.accion,
+    referenciaVisual: data.referenciaVisual,
+  });
+  return await this.historialRepository.save(historial);
+}
 
   async findByUserId(userId: number) {
     return await this.historialRepository.find({
