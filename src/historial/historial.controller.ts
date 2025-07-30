@@ -17,6 +17,7 @@ export class HistorialController {
 
   @Get()
   findAll(@Req() req: Request) {
+    console.log('🧪 req.user recibido:', req.user);
     const userId = (req.user as any).id;
     return this.historialService.findByUserId(userId);
   }
