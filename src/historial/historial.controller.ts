@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Request as Req, UseGuards } from '@nestjs/
 import { HistorialService } from './historial.service';
 import { CreateHistorialDto } from './dto/create-historial.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { Request } from 'express'; // ✅ agrega esta línea
+import { Request } from 'express';
 
 @Controller('historial')
 @UseGuards(AuthGuard('jwt'))
@@ -11,13 +11,13 @@ export class HistorialController {
 
   @Post()
   create(@Req() req: Request, @Body() createHistorialDto: CreateHistorialDto) {
-    const userId = (req.user as any).id; // 👈 usa cast para evitar error
+    const userId = (req.user as any).sub;
     return this.historialService.create(createHistorialDto, userId);
   }
 
   @Get()
   findAll(@Req() req: Request) {
-    const userId = (req.user as any).id;
+    const userId = (req.user as any).sub;
     return this.historialService.findByUserId(userId);
   }
 }

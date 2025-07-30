@@ -14,9 +14,6 @@ export class Historial {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column()
-  estadoAlEscanear!: string;
-
   @CreateDateColumn()
   createdAt!: Date;
 

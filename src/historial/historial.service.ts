@@ -11,16 +11,14 @@ export class HistorialService {
     private historialRepository: Repository<Historial>,
   ) {}
 
-  // Guardar historial con el userId autenticado
   async create(data: CreateHistorialDto, userId: number) {
     const historial = this.historialRepository.create({
-      ...data,
-      userId,
+      herramientaId: data.herramientaId,
+      userId
     });
     return await this.historialRepository.save(historial);
   }
 
-  // Devolver historial solo del usuario autenticado
   async findByUserId(userId: number) {
     return await this.historialRepository.find({
       where: { userId },
