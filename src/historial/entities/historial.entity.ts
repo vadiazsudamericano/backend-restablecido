@@ -30,4 +30,8 @@ export class Historial {
   @ManyToOne(() => User)
   @JoinColumn({ name: 'userId' })
   usuario!: User;
+
+  @Column({ nullable: true })
+referenciaVisual!: string;
+
 }
