@@ -5,6 +5,7 @@ import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { Role } from '../auth/enums/role.enum';
+import { BadRequestException } from '@nestjs/common';
 
 @Injectable()
 export class UsersService {
@@ -82,4 +83,13 @@ export class UsersService {
     const user = await this.userRepo.findOne({ where: { id } });
     return user ?? undefined;
   }
+  // src/users/users.service.ts
+async updateRole(id: number, role: string) {
+    const user = await this.userRepo.findOneBy({ id });
+    if (!user) throw new BadRequestException('Usuario no encontrado');
+
+    user.role = role as Role;
+    return this.userRepo.save(user);
+  }
+
 }

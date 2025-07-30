@@ -10,6 +10,9 @@ import { Role } from '../auth/enums/role.enum';
 import { AuthGuard } from '@nestjs/passport';
 import { Request as ExpressRequest } from 'express';
 import { Param } from '@nestjs/common';
+import {UpdateRoleDto} from './dto/update-role.dto';
+import { Patch } from '@nestjs/common';
+
 @Controller('users')
 export class UsersController {
   constructor(
@@ -92,6 +95,14 @@ async deleteUserById(@Param('id') id: string) {
   }
   await this.usersService.remove(+id);
   return { message: `Usuario con ID ${id} eliminado correctamente.` };
+}
+
+@Patch(':id/role')
+updateUserRole(
+  @Param('id') id: number,
+  @Body() updateRoleDto: UpdateRoleDto,
+) {
+  return this.usersService.updateRole(id, updateRoleDto.role);
 }
 
 }
