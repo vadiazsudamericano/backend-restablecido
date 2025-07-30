@@ -9,6 +9,7 @@ export class HistorialService {
   constructor(
     @InjectRepository(Historial)
     private historialRepository: Repository<Historial>,
+    
   ) {}
 
   async create(data: CreateHistorialDto, userId: number) {

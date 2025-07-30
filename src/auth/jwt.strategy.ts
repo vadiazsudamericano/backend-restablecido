@@ -32,7 +32,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
     // ✅ Devolver solo los campos necesarios para el contexto
     return {
-      sub: user.id, // Necesario para extraer el userId
+      id: user.id, // Necesario para extraer el userId
       email: user.email,
       role: user.role,
       nombre: user.nombre,

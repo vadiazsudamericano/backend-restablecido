@@ -11,13 +11,13 @@ export class HistorialController {
 
   @Post()
   create(@Req() req: Request, @Body() createHistorialDto: CreateHistorialDto) {
-    const userId = (req.user as any).sub;
+    const userId = (req.user as any).id;
     return this.historialService.create(createHistorialDto, userId);
   }
 
   @Get()
   findAll(@Req() req: Request) {
-    const userId = (req.user as any).sub;
+    const userId = (req.user as any).id;
     return this.historialService.findByUserId(userId);
   }
 }
