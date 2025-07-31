@@ -11,9 +11,6 @@ export class Historial {
   herramientaId!: number;
 
   @Column()
-  accion!: string;
-
-  @Column()
   referenciaVisual!: string;
 
   @ManyToOne(() => User, (user) => user.historial)

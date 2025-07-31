@@ -26,7 +26,6 @@ export class HistorialService {
       const historial = this.historialRepository.create({
         herramientaId: data.herramientaId,
         user: user, // ✅ Relación correcta
-        accion: data.accion,
         referenciaVisual: data.referenciaVisual,
       });
 
