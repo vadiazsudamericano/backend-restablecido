@@ -5,7 +5,6 @@ import * as process from 'process';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
   // Habilita CORS directamente
   app.enableCors({
     origin: '*', // O especifica tu frontend: 'https://tu-app.vercel.app'

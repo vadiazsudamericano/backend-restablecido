@@ -1,3 +1,5 @@
+// RUTA: src/auth/strategies/jwt.strategy.ts
+
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
@@ -10,30 +12,22 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     private readonly usersService: UsersService,
     private readonly configService: ConfigService
   ) {
-    console.log('--- JwtStrategy inicializada ---');
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
       secretOrKey: configService.get<string>('JWT_SECRET')
-
     });
   }
 
   async validate(payload: any) {
-    console.log('--- [JwtStrategy] Iniciando validación del payload ---');
-    console.log('Payload recibido del token:', payload);
-
-    const user = await this.usersService.findById(payload.sub);
-    console.log('Usuario encontrado en la base de datos:', user);
+    const user = await this.usersService.findById(payload.sub); // ✅ usamos "sub"
 
     if (!user) {
-      console.error('--- [JwtStrategy] ERROR: Usuario no encontrado en la DB. ---');
-      throw new UnauthorizedException('Token inválido o usuario no existe.');
+      throw new UnauthorizedException('Token inválido o usuario no encontrado.');
     }
 
-    // ✅ Devolver solo los campos necesarios para el contexto
     return {
-      id: user.id, // Necesario para extraer el userId
+      id: user.id,
       email: user.email,
       role: user.role,
       nombre: user.nombre,

@@ -33,8 +33,6 @@ async login(@Body() body: { email: string; password: string }) {
   return this.authService.login(user);
 }
 
-
-
   @Post('register')
   register(@Body() createUserDto: CreateUserDto) {
     return this.authService.register(createUserDto);

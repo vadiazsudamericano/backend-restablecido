@@ -1,11 +1,10 @@
-import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
+import { Injectable, ConflictException, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
-import * as bcrypt from 'bcrypt';
 import { Role } from '../auth/enums/role.enum';
-import { BadRequestException } from '@nestjs/common';
 
 @Injectable()
 export class UsersService {
@@ -16,11 +15,10 @@ export class UsersService {
 
   async create(data: CreateUserDto): Promise<User> {
     const existingUser = await this.userRepo.findOne({ where: { email: data.email } });
-
     const roleValue: Role = (data.role as Role) || Role.User;
 
     if (existingUser) {
-      console.log(`Usuario encontrado (${data.email}). Actualizando contraseña...`);
+      console.log(`🔄 Usuario existente (${data.email}). Actualizando contraseña...`);
       const hashedPassword = await bcrypt.hash(data.password, 10);
       await this.userRepo.update(existingUser.id, {
         nombre: data.nombre,
@@ -34,7 +32,7 @@ export class UsersService {
       return updated;
     }
 
-    console.log(`Usuario nuevo (${data.email}). Creando...`);
+    console.log(`🆕 Usuario nuevo (${data.email}). Creando...`);
     const hashedPassword = await bcrypt.hash(data.password, 10);
     const user = this.userRepo.create({
       nombre: data.nombre,
@@ -47,13 +45,11 @@ export class UsersService {
   }
 
   async findOneByEmail(email: string): Promise<User | undefined> {
-    const user = await this.userRepo.findOne({ where: { email } });
-    return user ?? undefined;
+    return await this.userRepo.findOne({ where: { email } }) ?? undefined;
   }
 
   async findById(id: number): Promise<User | undefined> {
-    const user = await this.userRepo.findOne({ where: { id } });
-    return user ?? undefined;
+    return await this.userRepo.findOne({ where: { id } }) ?? undefined;
   }
 
   findAll(): Promise<User[]> {
@@ -61,13 +57,11 @@ export class UsersService {
   }
 
   async findOneByEmailWithPassword(email: string): Promise<User | undefined> {
-    const user = await this.userRepo
+    return await this.userRepo
       .createQueryBuilder('user')
       .where('user.email = :email', { email })
-      .addSelect('user.password')
-      .addSelect('user.role')
-      .getOne();
-    return user ?? undefined;
+      .addSelect(['user.password', 'user.role'])
+      .getOne() ?? undefined;
   }
 
   async remove(id: number): Promise<{ message: string }> {
@@ -80,22 +74,20 @@ export class UsersService {
   }
 
   async findOne(id: number): Promise<User | undefined> {
-    const user = await this.userRepo.findOne({ where: { id } });
-    return user ?? undefined;
-  }
-  // src/users/users.service.ts
-async updateRole(id: number, role: string) {
-  const user = await this.userRepo.findOneBy({ id });
-  if (!user) {
-    throw new BadRequestException('Usuario no encontrado');
+    return await this.userRepo.findOne({ where: { id } }) ?? undefined;
   }
 
-  // Validación estricta del rol
-  if (!Object.values(Role).includes(role as Role)) {
-    throw new BadRequestException(`Rol inválido. Debe ser uno de: ${Object.values(Role).join(', ')}`);
-  }
+  async updateRole(id: number, role: string) {
+    const user = await this.userRepo.findOneBy({ id });
+    if (!user) {
+      throw new BadRequestException('Usuario no encontrado');
+    }
 
-  user.role = role as Role;
-  return this.userRepo.save(user);
-}
+    if (!Object.values(Role).includes(role as Role)) {
+      throw new BadRequestException(`Rol inválido. Debe ser uno de: ${Object.values(Role).join(', ')}`);
+    }
+
+    user.role = role as Role;
+    return this.userRepo.save(user);
+  }
 }
