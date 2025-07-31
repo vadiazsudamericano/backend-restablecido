@@ -1,7 +1,8 @@
+// RUTA: src/users/user.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { Historial } from '../historial/entities/historial.entity'; // Importa la entidad Historial
-import { Role } from '../auth/enums/role.enum';
-@Entity('user')
+import { Historial } from '../historial/entities/historial.entity';
+
+@Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id!: number;
@@ -14,18 +15,13 @@ export class User {
 
   @Column({ unique: true })
   email!: string;
-  
-   @Column({
-    select: false // <-- AÑADE ESTA LÍNEA
-  })
+
+  @Column({ nullable: true })
   password?: string;
 
+  @Column()
+  role!: string;
 
-  @Column({
-    type: 'varchar',
-    default: Role.User,
-    name: 'rol' // <-- 2. Usa el Enum para el valor por defecto
-  })
-  role!: Role; 
-  
+  @OneToMany(() => Historial, (historial) => historial.user)
+  historial!: Historial[];
 }

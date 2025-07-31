@@ -1,13 +1,6 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  ManyToOne,
-  CreateDateColumn,
-  JoinColumn,
-} from 'typeorm';
+// RUTA: src/historial/historial.entity.ts
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { User } from '../../users/user.entity';
-import { Herramienta } from '../../herramienta/herramienta.entity';
 
 @Entity()
 export class Historial {
@@ -18,22 +11,11 @@ export class Historial {
   herramientaId!: number;
 
   @Column()
-  userId!: number;
+  accion!: string;
 
-  @Column({ nullable: true })
-  accion?: string;
+  @Column()
+  referenciaVisual!: string;
 
-  @Column({ nullable: true })
-  referenciaVisual?: string;
-
-  @CreateDateColumn()
-  createdAt!: Date;
-
-  @ManyToOne(() => Herramienta)
-  @JoinColumn({ name: 'herramientaId' })
-  herramienta!: Herramienta;
-
-  @ManyToOne(() => User)
-  @JoinColumn({ name: 'userId' })
-  usuario!: User;
+  @ManyToOne(() => User, (user) => user.historial)
+  user!: User;
 }
