@@ -12,7 +12,7 @@ export class HistorialService {
     @InjectRepository(Historial)
     private historialRepository: Repository<Historial>,
     @InjectRepository(User)
-    private userRepository: Repository<User>, // ✅ Repositorio de User
+    private userRepository: Repository<User>,  // ✅ Repositorio de User
   ) {}
 
   async create(data: CreateHistorialDto, userId: number) {
