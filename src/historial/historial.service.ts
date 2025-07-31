@@ -28,10 +28,17 @@ export class HistorialService {
   }
 
   async findByUserId(userId: number) {
+  try {
+    console.log('🔍 Buscando historial para userId:', userId);
     return await this.historialRepository.find({
       where: { userId },
-      relations: ['herramienta'],
+      relations: ['herramienta', 'usuario'], // ✅ AÑADIDO
       order: { createdAt: 'DESC' },
     });
+  } catch (error) {
+    console.error('❌ Error en findByUserId:', error);
+    throw new InternalServerErrorException('Error al obtener historial');
   }
+}
+
 }
