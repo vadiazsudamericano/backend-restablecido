@@ -1,5 +1,6 @@
-// RUTA: src/historial/historial.entity.ts
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+// RUTA: src/historial/entities/historial.entity.ts
+
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { User } from '../../users/user.entity';
 
 @Entity()
@@ -7,12 +8,16 @@ export class Historial {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column()
+  @Column({ name: 'herramientaId' })
   herramientaId!: number;
 
-  @Column()
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  fecha!: Date;
+
+  @Column({ name: 'referencia_visual', type: 'varchar', length: 100 })
   referenciaVisual!: string;
 
-  @ManyToOne(() => User, (user) => user.historial)
+  @ManyToOne(() => User, user => user.id, { eager: true })
+  @JoinColumn({ name: 'userId' }) // <- ¡Muy importante!
   user!: User;
 }
