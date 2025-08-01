@@ -1,5 +1,10 @@
 // RUTA: src/historial/historial.service.ts
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Historial } from './entities/historial.entity';
@@ -12,7 +17,7 @@ export class HistorialService {
     @InjectRepository(Historial)
     private historialRepository: Repository<Historial>,
     @InjectRepository(User)
-    private userRepository: Repository<User>,  // ✅ Repositorio de User
+    private userRepository: Repository<User>,
   ) {}
 
   async create(data: CreateHistorialDto, userId: number) {
@@ -25,8 +30,8 @@ export class HistorialService {
 
       const historial = this.historialRepository.create({
         herramientaId: data.herramientaId,
-        user: user, // ✅ Relación correcta
-        referenciaVisual: data.referenciaVisual,
+        user,
+        referenciaVisual: data.referencia_visual,
       });
 
       console.log('📦 Objeto a guardar:', historial);
@@ -44,7 +49,7 @@ export class HistorialService {
     try {
       return await this.historialRepository.find({
         where: { user: { id: userId } },
-        relations: ['user'],
+        relations: ['user', 'herramienta'], // ✅ Relación agregada aquí
       });
     } catch (error) {
       console.error('❌ Error en findByUserId:', error);

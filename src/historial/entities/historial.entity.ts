@@ -14,8 +14,8 @@ export class Historial {
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   fecha!: Date;
 
-  @Column({ name: 'referencia_visual', type: 'varchar', length: 100 })
-  referenciaVisual!: string;
+  @Column({ name: 'referencia_visual', type: 'varchar', length: 100, nullable: false })
+referenciaVisual!: string;
 
   @ManyToOne(() => User, user => user.id, { eager: true })
   @JoinColumn({ name: 'userId' }) // <- ¡Muy importante!
