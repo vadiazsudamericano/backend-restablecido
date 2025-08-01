@@ -1,5 +1,3 @@
-// RUTA: src/historial/historial.service.ts
-
 import {
   Injectable,
   InternalServerErrorException,
@@ -10,14 +8,19 @@ import { Repository } from 'typeorm';
 import { Historial } from './entities/historial.entity';
 import { CreateHistorialDto } from './dto/create-historial.dto';
 import { User } from '../users/user.entity';
+import { Herramienta } from '../herramienta/herramienta.entity';
 
 @Injectable()
 export class HistorialService {
   constructor(
     @InjectRepository(Historial)
     private historialRepository: Repository<Historial>,
+
     @InjectRepository(User)
     private userRepository: Repository<User>,
+
+    @InjectRepository(Herramienta)
+    private herramientaRepository: Repository<Herramienta>,
   ) {}
 
   async create(data: CreateHistorialDto, userId: number) {
@@ -28,18 +31,22 @@ export class HistorialService {
       const user = await this.userRepository.findOneBy({ id: userId });
       if (!user) throw new NotFoundException('Usuario no encontrado');
 
+      const herramienta = await this.herramientaRepository.findOneBy({
+        id: data.herramientaId,
+      });
+      if (!herramienta) throw new NotFoundException('Herramienta no encontrada');
+
       const historial = this.historialRepository.create({
-        herramientaId: data.herramientaId,
+        herramienta,
         user,
         referenciaVisual: data.referencia_visual,
       });
 
-      console.log('📦 Objeto a guardar:', historial);
       const resultado = await this.historialRepository.save(historial);
       console.log('✅ Historial guardado exitosamente:', resultado);
 
       return resultado;
-    } catch (error: any) {
+    } catch (error) {
       console.error('❌ Error al crear historial:', error);
       throw new InternalServerErrorException('Error al guardar historial');
     }
@@ -49,7 +56,8 @@ export class HistorialService {
     try {
       return await this.historialRepository.find({
         where: { user: { id: userId } },
-        relations: ['user', 'herramienta'], // ✅ Relación agregada aquí
+        relations: ['user', 'herramienta'],
+        order: { fecha: 'DESC' },
       });
     } catch (error) {
       console.error('❌ Error en findByUserId:', error);
