@@ -2,6 +2,7 @@ import { Controller, Get, Param, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Herramienta } from './herramienta.entity';
+import { HerramientaService } from './herramienta.service';
 
 @Controller('herramientas')
 export class HerramientaController {

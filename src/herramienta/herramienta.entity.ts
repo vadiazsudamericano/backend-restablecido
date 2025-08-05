@@ -27,4 +27,8 @@ export class Herramienta {
   proceso!: string[];
   @OneToMany(() => RegistroHerramienta, (registro) => registro.herramienta)
 registros!: RegistroHerramienta[];
+
+@Column("text", { array: true, nullable: true })
+materiales!: string[];
+
 }
